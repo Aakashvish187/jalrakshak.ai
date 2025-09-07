@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌊 JalRakshā AI - Flood & Disaster Early Warning & Rescue Management System</title>
+    <meta name="description" content="AI + IoT Powered Flood & Disaster Early Warning & Rescue Management System">
+    <meta name="keywords" content="flood prediction, disaster management, AI, IoT, early warning, rescue system">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Custom Tailwind Config -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            200: '#bfdbfe',
+                            300: '#93c5fd',
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                        },
+                        risk: {
+                            low: '#10b981',
+                            medium: '#f59e0b',
+                            high: '#ef4444',
+                        }
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'bounce-subtle': 'bounce 2s infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                        'wave': 'wave 2s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        glow: {
+                            '0%': { boxShadow: '0 0 5px rgba(59, 130, 246, 0.5)' },
+                            '100%': { boxShadow: '0 0 20px rgba(59, 130, 246, 0.8)' },
+                        },
+                        wave: {
+                            '0%, 100%': { transform: 'translateX(0px)' },
+                            '50%': { transform: 'translateX(10px)' },
+                        }
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        .animate-pulse-slow {
+            animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        .water-wave {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z' opacity='.25' fill='%23ffffff'/%3E%3Cpath d='M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z' opacity='.5' fill='%23ffffff'/%3E%3Cpath d='M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z' fill='%23ffffff'/%3E%3C/svg%3E") repeat-x;
+            animation: wave 2s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white font-sans overflow-x-hidden">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 glass-card border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-2">
+                    <span class="text-2xl">🌊</span>
+                    <span class="text-xl font-bold gradient-text">JalRakshā AI</span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#problem" class="text-gray-300 hover:text-white transition-colors">Problem</a>
+                    <a href="#solution" class="text-gray-300 hover:text-white transition-colors">Solution</a>
+                    <a href="#features" class="text-gray-300 hover:text-white transition-colors">Features</a>
+                    <a href="#demo" class="text-gray-300 hover:text-white transition-colors">Demo</a>
+                    <a href="#team" class="text-gray-300 hover:text-white transition-colors">Team</a>
+                </div>
+                <a href="#demo" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">
+                    Watch Demo
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-900 via-indigo-900 to-purple-900 overflow-hidden">
+        <!-- Animated Background Elements -->
+        <div class="absolute inset-0">
+            <div class="absolute top-20 left-10 w-20 h-20 bg-blue-500/20 rounded-full animate-float"></div>
+            <div class="absolute top-40 right-20 w-16 h-16 bg-indigo-500/20 rounded-full animate-float" style="animation-delay: 2s;"></div>
+            <div class="absolute bottom-40 left-20 w-24 h-24 bg-purple-500/20 rounded-full animate-float" style="animation-delay: 4s;"></div>
+            <div class="absolute bottom-20 right-10 w-18 h-18 bg-cyan-500/20 rounded-full animate-float" style="animation-delay: 1s;"></div>
+        </div>
+        
+        <!-- Water Wave Animation -->
+        <div class="water-wave"></div>
+        
+        <div class="relative z-10 text-center px-6 max-w-6xl mx-auto">
+            <motion.div class="mb-8">
+                <h1 class="text-6xl md:text-8xl font-black mb-6 gradient-text animate-glow">
+                    🌊 JalRakshā AI
+                </h1>
+                <p class="text-2xl md:text-3xl font-light text-gray-200 mb-8 max-w-4xl mx-auto leading-relaxed">
+                    AI + IoT Powered Flood & Disaster Early Warning & Rescue Management System
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+                    <a href="#demo" class="bg-white text-blue-700 px-8 py-4 rounded-xl font-bold text-lg hover:bg-gray-200 transition-all transform hover:scale-105 shadow-lg">
+                        🎥 Watch Demo
+                    </a>
+                    <a href="#features" class="glass-card border border-white/30 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white/10 transition-all transform hover:scale-105">
+                        ✨ Explore Features
+                    </a>
+                </div>
+            </motion.div>
+            
+            <!-- Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+                <div class="glass-card p-6 rounded-xl text-center">
+                    <div class="text-3xl font-bold text-blue-400 mb-2">95%</div>
+                    <div class="text-gray-300">Prediction Accuracy</div>
+                </div>
+                <div class="glass-card p-6 rounded-xl text-center">
+                    <div class="text-3xl font-bold text-green-400 mb-2">&lt;30s</div>
+                    <div class="text-gray-300">Alert Response Time</div>
+                </div>
+                <div class="glass-card p-6 rounded-xl text-center">
+                    <div class="text-3xl font-bold text-purple-400 mb-2">24/7</div>
+                    <div class="text-gray-300">Real-time Monitoring</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Problem Section -->
+    <section id="problem" class="py-20 px-6 bg-gray-800">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-5xl font-bold mb-6 gradient-text">🌍 The Challenge</h2>
+                <p class="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
+                    Every year, floods in India cause massive loss of life and property. States like Punjab, Bihar, and Jharkhand face delayed rescue operations and lack of real-time flood warnings, leaving communities vulnerable.
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="glass-card p-8 rounded-xl text-center">
+                    <div class="text-6xl mb-4">💔</div>
+                    <h3 class="text-2xl font-bold mb-4 text-red-400">Loss of Life</h3>
+                    <p class="text-gray-300">Thousands of lives lost annually due to delayed flood warnings and rescue operations.</p>
+                </div>
+                <div class="glass-card p-8 rounded-xl text-center">
+                    <div class="text-6xl mb-4">🏠</div>
+                    <h3 class="text-2xl font-bold mb-4 text-yellow-400">Property Damage</h3>
+                    <p class="text-gray-300">Billions in property damage due to lack of early warning systems and evacuation plans.</p>
+                </div>
+                <div class="glass-card p-8 rounded-xl text-center">
+                    <div class="text-6xl mb-4">⏰</div>
+                    <h3 class="text-2xl font-bold mb-4 text-orange-400">Delayed Response</h3>
+                    <p class="text-gray-300">Slow emergency response times due to inadequate real-time monitoring and communication systems.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solution Section -->
+    <section id="solution" class="py-20 px-6 bg-gradient-to-r from-blue-900 to-indigo-900">
+        <div class="max-w-6xl mx-auto text-center">
+            <h2 class="text-5xl font-bold mb-8 gradient-text">💡 Our Solution – JalRakshā AI</h2>
+            <p class="text-xl text-gray-200 mb-12 max-w-4xl mx-auto leading-relaxed">
+                JalRakshā AI uses Artificial Intelligence and IoT sensor simulation to predict flood risk, provide early warnings, and coordinate rescue operations in real-time – ensuring faster response and saving lives.
+            </p>
+            
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="text-left">
+                    <h3 class="text-3xl font-bold mb-6 text-blue-400">How It Works</h3>
+                    <div class="space-y-6">
+                        <div class="flex items-start space-x-4">
+                            <div class="bg-blue-600 rounded-full p-3 flex-shrink-0">
+                                <span class="text-white font-bold">1</span>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-semibold mb-2">IoT Data Collection</h4>
+                                <p class="text-gray-300">Real-time monitoring of water levels, rainfall, and river flow using simulated sensors.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4">
+                            <div class="bg-blue-600 rounded-full p-3 flex-shrink-0">
+                                <span class="text-white font-bold">2</span>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-semibold mb-2">AI Risk Assessment</h4>
+                                <p class="text-gray-300">Machine learning model analyzes data to predict flood risk levels (Low, Medium, High).</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4">
+                            <div class="bg-blue-600 rounded-full p-3 flex-shrink-0">
+                                <span class="text-white font-bold">3</span>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-semibold mb-2">Early Warning System</h4>
+                                <p class="text-gray-300">Instant alerts sent to authorities and communities through multiple channels.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4">
+                            <div class="bg-blue-600 rounded-full p-3 flex-shrink-0">
+                                <span class="text-white font-bold">4</span>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-semibold mb-2">Rescue Coordination</h4>
+                                <p class="text-gray-300">SOS bot and dashboard coordinate rescue teams for efficient emergency response.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-card p-8 rounded-xl">
+                    <div class="text-8xl mb-6 text-center">🤖</div>
+                    <h3 class="text-2xl font-bold mb-4 text-center">AI-Powered Prediction</h3>
+                    <p class="text-gray-300 text-center mb-6">Our RandomForest machine learning model processes environmental data to predict flood risk with 95% accuracy.</p>
+                    <div class="grid grid-cols-3 gap-4 text-center">
+                        <div class="bg-green-500/20 p-4 rounded-lg border border-green-500/30">
+                            <div class="text-2xl font-bold text-green-400">LOW</div>
+                            <div class="text-sm text-gray-300">Safe</div>
+                        </div>
+                        <div class="bg-yellow-500/20 p-4 rounded-lg border border-yellow-500/30">
+                            <div class="text-2xl font-bold text-yellow-400">MEDIUM</div>
+                            <div class="text-sm text-gray-300">Caution</div>
+                        </div>
+                        <div class="bg-red-500/20 p-4 rounded-lg border border-red-500/30">
+                            <div class="text-2xl font-bold text-red-400">HIGH</div>
+                            <div class="text-sm text-gray-300">Alert</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 px-6 bg-gray-800">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-5xl font-bold mb-6 gradient-text">✨ Key Features</h2>
+                <p class="text-xl text-gray-300 max-w-3xl mx-auto">
+                    Comprehensive flood prediction and disaster management system with cutting-edge technology
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="glass-card p-8 rounded-xl hover:scale-105 transition-all duration-300 group">
+                    <div class="text-6xl mb-6 group-hover:animate-bounce">🔮</div>
+                    <h3 class="text-2xl font-bold mb-4 text-blue-400">AI Prediction</h3>
+                    <p class="text-gray-300 mb-4">Machine learning model forecasts flood risk levels: Low, Medium, or High with confidence scoring.</p>
+                    <ul class="text-sm text-gray-400 space-y-1">
+                        <li>• RandomForest Classifier</li>
+                        <li>• 95% Prediction Accuracy</li>
+                        <li>• Real-time Risk Assessment</li>
+                    </ul>
+                </div>
+                
+                <div class="glass-card p-8 rounded-xl hover:scale-105 transition-all duration-300 group">
+                    <div class="text-6xl mb-6 group-hover:animate-bounce">🛰</div>
+                    <h3 class="text-2xl font-bold mb-4 text-green-400">IoT Simulation</h3>
+                    <p class="text-gray-300 mb-4">Generates live water level, rainfall, and river flow data for comprehensive testing.</p>
+                    <ul class="text-sm text-gray-400 space-y-1">
+                        <li>• Water Level Sensors</li>
+                        <li>• Rainfall Monitoring</li>
+                        <li>• River Flow Tracking</li>
+                    </ul>
+                </div>
+                
+                <div class="glass-card p-8 rounded-xl hover:scale-105 transition-all duration-300 group">
+                    <div class="text-6xl mb-6 group-hover:animate-bounce">📡</div>
+                    <h3 class="text-2xl font-bold mb-4 text-yellow-400">Real-Time Alerts</h3>
+                    <p class="text-gray-300 mb-4">Interactive map and alert panel notify authorities instantly with visual warnings.</p>
+                    <ul class="text-sm text-gray-400 space-y-1">
+                        <li>• Live Map Visualization</li>
+                        <li>• Instant Notifications</li>
+                        <li>• Risk-based Color Coding</li>
+                    </ul>
+                </div>
+                
+                <div class="glass-card p-8 rounded-xl hover:scale-105 transition-all duration-300 group">
+                    <div class="text-6xl mb-6 group-hover:animate-bounce">🚑</div>
+                    <h3 class="text-2xl font-bold mb-4 text-red-400">Rescue Coordination</h3>
+                    <p class="text-gray-300 mb-4">WhatsApp/Telegram SOS bot connects victims with rescue teams efficiently.</p>
+                    <ul class="text-sm text-gray-400 space-y-1">
+                        <li>• SOS Bot Integration</li>
+                        <li>• Team Management</li>
+                        <li>• Location Tracking</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Section -->
+    <section id="demo" class="py-20 px-6 bg-gradient-to-r from-indigo-900 to-purple-900">
+        <div class="max-w-6xl mx-auto text-center">
+            <h2 class="text-5xl font-bold mb-8 gradient-text">🎥 Demo in Action</h2>
+            <p class="text-xl text-gray-200 mb-12 max-w-3xl mx-auto">
+                Watch how JalRakshā AI predicts floods and manages rescue operations in real-time
+            </p>
+            
+            <div class="glass-card p-8 rounded-xl mb-8">
+                <div class="aspect-w-16 aspect-h-9 bg-gray-800 rounded-lg overflow-hidden">
+                    <iframe 
+                        class="w-full h-96 rounded-lg shadow-2xl"
+                        src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                        title="JalRakshā AI Demo Video" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="glass-card p-6 rounded-xl text-center">
+                    <div class="text-4xl mb-4">⚡</div>
+                    <h3 class="text-xl font-bold mb-2">Live Demo</h3>
+                    <p class="text-gray-300">Real-time flood prediction and alert system demonstration</p>
+                </div>
+                <div class="glass-card p-6 rounded-xl text-center">
+                    <div class="text-4xl mb-4">📱</div>
+                    <h3 class="text-xl font-bold mb-2">Mobile Ready</h3>
+                    <p class="text-gray-300">Responsive design works perfectly on all devices</p>
+                </div>
+                <div class="glass-card p-6 rounded-xl text-center">
+                    <div class="text-4xl mb-4">🚀</div>
+                    <h3 class="text-xl font-bold mb-2">Production Ready</h3>
+                    <p class="text-gray-300">Scalable architecture ready for real-world deployment</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section id="team" class="py-20 px-6 bg-gray-800">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-5xl font-bold mb-6 gradient-text">👥 Meet the Team</h2>
+                <p class="text-xl text-gray-300 max-w-3xl mx-auto">
+                    Passionate developers building the future of disaster management
+                </p>
+            </div>
+            
+            <!-- Team Leader -->
+            <div class="mb-16">
+                <div class="glass-card p-8 rounded-xl text-center hover:scale-105 transition-all duration-300 border-2 border-yellow-400/50 bg-gradient-to-br from-yellow-500/10 to-orange-500/10">
+                    <div class="w-40 h-40 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-full mx-auto mb-6 flex items-center justify-center shadow-2xl">
+                        <span class="text-5xl font-bold text-white">👑</span>
+                    </div>
+                    <h3 class="text-3xl font-bold mb-2 text-yellow-400">Aakash Vishwakarma</h3>
+                    <p class="text-xl text-gray-300 mb-4 font-semibold">Team Leader & Visionary</p>
+                    <div class="text-gray-300 mb-6 max-w-2xl mx-auto">
+                        <p class="text-lg mb-4">"Building technology that saves lives - our vision is to create a world where no one is caught unprepared by natural disasters."</p>
+                        <p class="text-sm text-gray-400 italic">Leading the charge in AI-powered disaster management and emergency response systems.</p>
+                    </div>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-400">
+                        <div class="bg-blue-500/20 p-3 rounded-lg">
+                            <div class="font-semibold text-blue-400">Backend</div>
+                            <div>FastAPI & Python</div>
+                        </div>
+                        <div class="bg-green-500/20 p-3 rounded-lg">
+                            <div class="font-semibold text-green-400">AI/ML</div>
+                            <div>Machine Learning</div>
+                        </div>
+                        <div class="bg-purple-500/20 p-3 rounded-lg">
+                            <div class="font-semibold text-purple-400">Architecture</div>
+                            <div>System Design</div>
+                        </div>
+                        <div class="bg-red-500/20 p-3 rounded-lg">
+                            <div class="font-semibold text-red-400">Leadership</div>
+                            <div>Team Management</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Core Team Members -->
+            <div class="mb-12">
+                <h3 class="text-3xl font-bold text-center mb-8 gradient-text">🌟 Core Team Members</h3>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="glass-card p-6 rounded-xl text-center hover:scale-105 transition-all duration-300">
+                        <div class="w-24 h-24 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full mx-auto mb-4 flex items-center justify-center">
+                            <span class="text-2xl font-bold text-white">R</span>
+                        </div>
+                        <h4 class="text-xl font-bold mb-2 text-blue-400">Raj Makwana</h4>
+                        <p class="text-gray-300 mb-3">Core Member</p>
+                        <div class="text-sm text-gray-400 space-y-1">
+                            <div>• Full-Stack Development</div>
+                            <div>• API Integration</div>
+                            <div>• Database Management</div>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card p-6 rounded-xl text-center hover:scale-105 transition-all duration-300">
+                        <div class="w-24 h-24 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full mx-auto mb-4 flex items-center justify-center">
+                            <span class="text-2xl font-bold text-white">R</span>
+                        </div>
+                        <h4 class="text-xl font-bold mb-2 text-green-400">Rohan Jani</h4>
+                        <p class="text-gray-300 mb-3">Core Member</p>
+                        <div class="text-sm text-gray-400 space-y-1">
+                            <div>• Frontend Development</div>
+                            <div>• UI/UX Design</div>
+                            <div>• React & JavaScript</div>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card p-6 rounded-xl text-center hover:scale-105 transition-all duration-300">
+                        <div class="w-24 h-24 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full mx-auto mb-4 flex items-center justify-center">
+                            <span class="text-2xl font-bold text-white">K</span>
+                        </div>
+                        <h4 class="text-xl font-bold mb-2 text-purple-400">Kathan Darji</h4>
+                        <p class="text-gray-300 mb-3">Core Member</p>
+                        <div class="text-sm text-gray-400 space-y-1">
+                            <div>• IoT Development</div>
+                            <div>• Sensor Integration</div>
+                            <div>• Data Processing</div>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card p-6 rounded-xl text-center hover:scale-105 transition-all duration-300">
+                        <div class="w-24 h-24 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full mx-auto mb-4 flex items-center justify-center">
+                            <span class="text-2xl font-bold text-white">M</span>
+                        </div>
+                        <h4 class="text-xl font-bold mb-2 text-cyan-400">Maitri Parmar</h4>
+                        <p class="text-gray-300 mb-3">Core Member</p>
+                        <div class="text-sm text-gray-400 space-y-1">
+                            <div>• Mobile Development</div>
+                            <div>• User Experience</div>
+                            <div>• Testing & QA</div>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card p-6 rounded-xl text-center hover:scale-105 transition-all duration-300">
+                        <div class="w-24 h-24 bg-gradient-to-br from-orange-500 to-red-600 rounded-full mx-auto mb-4 flex items-center justify-center">
+                            <span class="text-2xl font-bold text-white">S</span>
+                        </div>
+                        <h4 class="text-xl font-bold mb-2 text-orange-400">Shivam Dabhi</h4>
+                        <p class="text-gray-300 mb-3">Core Member</p>
+                        <div class="text-sm text-gray-400 space-y-1">
+                            <div>• DevOps & Deployment</div>
+                            <div>• Cloud Infrastructure</div>
+                            <div>• System Monitoring</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Substitute Members -->
+            <div>
+                <h3 class="text-2xl font-bold text-center mb-8 gradient-text">🔄 Substitute Members</h3>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="glass-card p-6 rounded-xl text-center hover:scale-105 transition-all duration-300 opacity-80">
+                        <div class="w-20 h-20 bg-gradient-to-br from-gray-500 to-gray-600 rounded-full mx-auto mb-4 flex items-center justify-center">
+                            <span class="text-xl font-bold text-white">R</span>
+                        </div>
+                        <h4 class="text-lg font-bold mb-2 text-gray-400">Ren Desai</h4>
+                        <p class="text-gray-400 mb-3">Substitute</p>
+                        <div class="text-sm text-gray-500 space-y-1">
+                            <div>• Backup Developer</div>
+                            <div>• Support Role</div>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card p-6 rounded-xl text-center hover:scale-105 transition-all duration-300 opacity-80">
+                        <div class="w-20 h-20 bg-gradient-to-br from-gray-500 to-gray-600 rounded-full mx-auto mb-4 flex items-center justify-center">
+                            <span class="text-xl font-bold text-white">S</span>
+                        </div>
+                        <h4 class="text-lg font-bold mb-2 text-gray-400">Saswatsinh Chawhan</h4>
+                        <p class="text-gray-400 mb-3">Substitute</p>
+                        <div class="text-sm text-gray-500 space-y-1">
+                            <div>• Backup Developer</div>
+                            <div>• Support Role</div>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card p-6 rounded-xl text-center hover:scale-105 transition-all duration-300 opacity-80">
+                        <div class="w-20 h-20 bg-gradient-to-br from-gray-500 to-gray-600 rounded-full mx-auto mb-4 flex items-center justify-center">
+                            <span class="text-xl font-bold text-white">K</span>
+                        </div>
+                        <h4 class="text-lg font-bold mb-2 text-gray-400">Krishna Patel</h4>
+                        <p class="text-gray-400 mb-3">Substitute</p>
+                        <div class="text-sm text-gray-500 space-y-1">
+                            <div>• Backup Developer</div>
+                            <div>• Support Role</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technology Stack -->
+    <section class="py-20 px-6 bg-gradient-to-r from-blue-900 to-indigo-900">
+        <div class="max-w-6xl mx-auto text-center">
+            <h2 class="text-5xl font-bold mb-8 gradient-text">🛠️ Technology Stack</h2>
+            <p class="text-xl text-gray-200 mb-12 max-w-3xl mx-auto">
+                Built with modern, scalable technologies for production-ready deployment
+            </p>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8">
+                <div class="glass-card p-6 rounded-xl text-center hover:scale-105 transition-all duration-300">
+                    <div class="text-4xl mb-4">🐍</div>
+                    <div class="font-semibold">Python</div>
+                    <div class="text-sm text-gray-400">Backend</div>
+                </div>
+                <div class="glass-card p-6 rounded-xl text-center hover:scale-105 transition-all duration-300">
+                    <div class="text-4xl mb-4">⚡</div>
+                    <div class="font-semibold">FastAPI</div>
+                    <div class="text-sm text-gray-400">API Framework</div>
+                </div>
+                <div class="glass-card p-6 rounded-xl text-center hover:scale-105 transition-all duration-300">
+                    <div class="text-4xl mb-4">⚛️</div>
+                    <div class="font-semibold">React</div>
+                    <div class="text-sm text-gray-400">Frontend</div>
+                </div>
+                <div class="glass-card p-6 rounded-xl text-center hover:scale-105 transition-all duration-300">
+                    <div class="text-4xl mb-4">🤖</div>
+                    <div class="font-semibold">scikit-learn</div>
+                    <div class="text-sm text-gray-400">Machine Learning</div>
+                </div>
+                <div class="glass-card p-6 rounded-xl text-center hover:scale-105 transition-all duration-300">
+                    <div class="text-4xl mb-4">🗄️</div>
+                    <div class="font-semibold">SQLite</div>
+                    <div class="text-sm text-gray-400">Database</div>
+                </div>
+                <div class="glass-card p-6 rounded-xl text-center hover:scale-105 transition-all duration-300">
+                    <div class="text-4xl mb-4">📱</div>
+                    <div class="font-semibold">Telegram Bot</div>
+                    <div class="text-sm text-gray-400">SOS System</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="py-20 px-6 bg-gray-800">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-5xl font-bold mb-8 gradient-text">🚀 Ready to Save Lives?</h2>
+            <p class="text-xl text-gray-300 mb-12 max-w-3xl mx-auto">
+                JalRakshā AI is ready for deployment. Join us in revolutionizing flood prediction and disaster management.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
+                <a href="#demo" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all transform hover:scale-105 shadow-lg">
+                    🎥 Watch Full Demo
+                </a>
+                <a href="https://github.com/your-repo/jalraksha-ai" class="glass-card border border-white/30 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white/10 transition-all transform hover:scale-105">
+                    📁 View Source Code
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 py-12 px-6 border-t border-gray-800">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <span class="text-2xl">🌊</span>
+                        <span class="text-xl font-bold gradient-text">JalRakshā AI</span>
+                    </div>
+                    <p class="text-gray-400 mb-4">
+                        AI-powered flood prediction and disaster management system for a safer tomorrow.
+                    </p>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Product</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#features" class="hover:text-white transition-colors">Features</a></li>
+                        <li><a href="#demo" class="hover:text-white transition-colors">Demo</a></li>
+                        <li><a href="#solution" class="hover:text-white transition-colors">How It Works</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Technology</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white transition-colors">AI/ML</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">IoT Sensors</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Real-time Alerts</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Contact</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li>📧 hello@jalraksha.ai</li>
+                        <li>🐙 GitHub Repository</li>
+                        <li>📱 Telegram Bot</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-500">
+                <p>&copy; 2025 JalRakshā AI. Built with ❤️ for disaster management and community safety.</p>
+                <p class="mt-2">🚀 Hackathon Project - Ready for Production Deployment</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Smooth scrolling script -->
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add scroll effect to navigation
+        window.addEventListener('scroll', function() {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 100) {
+                nav.classList.add('bg-gray-900/90');
+            } else {
+                nav.classList.remove('bg-gray-900/90');
+            }
+        });
+
+        // Add animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-fade-in');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all sections
+        document.querySelectorAll('section').forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+
+</body>
+</html>
